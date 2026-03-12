@@ -15,12 +15,13 @@ def printer_function(plant_variety) -> None:
 
 def main():
     print("=== Plant Factory Output ===")
-    p1 = Plant("Rose", 25, 30)
-    p2 = Plant("Sunflower", 80, 45)
-    p3 = Plant("Cactus", 5, 90)
-    p4 = Plant("Oak", 200, 365)
-    p5 = Plant("Fern", 15, 120)
-    plant_variety = [p1, p2, p3, p4, p5]
+    plant_variety: list[Plant] = [
+        Plant("Rose", 25, 30)
+        Plant("Sunflower", 80, 45)
+        Plant("Cactus", 5, 90)
+        Plant("Oak", 200, 365)
+        Plant("Fern", 15, 120)
+    ]
     printer_function(plant_variety)
     print("")
     print(f"Total plants created: {Plant.num_plants}")
