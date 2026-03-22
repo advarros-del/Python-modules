@@ -1,42 +1,28 @@
-check_temperature(temp_str) -> int:
-    i : int = 0
-    while temp_str:
-        if temp_str[i] >= '0' and temp_str[i] <= '9':
-            i += 1
-        else:
-            print("Invalid input. Please enter a valid temperature.")
-            return None
-    temp: int = int(temp_str)
-    if temp >= 0 and temp <= 40:
-        return temp
-    elif temp < 0:
-        print("The temperature too low")
-    else:
-        print("The temperature is too high")
-
-
-test_temperature_input(temp) -> None:
-    print("=== Garden Temperature Checker ===")
-    print("")
-    print(f"Testing temperature: {temp}")
-    aux: str = temp
-    if ft_is_digit(temp) == "None":
-        print(f"Error: {aux} is not a valid number")
-        return None
-    if temp >= 0 and temp <= 40:
-        print(f"Temperature {temp}ºC is perfect for plants!")
-    elif temp > 40:
-        print(f"Error: {temp}ºC is too hot for plants (max 40ºC)")
-    elif temp < 0:
-        print(f"Error: {temp}ºC is too cold for plants (max 0ºC)")
-    print("All test completed - programs didn't crash!")
+def test_temperature() -> None:
+    print("=== Garden Temperatue ===")
+    input_temperature("25")
+    input_temperature("abc")
+    print("All test completed - program didn't crash!")
     
-ft_is_digit(thing:str)
-    i : int = 0
-    while temp_str:
-        if temp_str[i] >= '0' and temp_str[i] <= '9':
-            i += 1
+
+
+def input_temperature(temp_str) -> None:
+    print("")
+    print(f"Input data: '{temp_str}'")
+    if ft_is_digit(temp_str) == 0:
+        print(f"Temperature is now {temp_str}")
+    else:
+        print(
+            f"Caught inpu_temperature error: invalid literal for int() with base 10: '{temp_str}'"
+            )
+    
+def ft_is_digit(thing: str) -> int:
+    i: int = 0
+    for i in thing:
+        if i in "0123456789":
+            pass
         else:
-            print("Invalid input. Please enter a valid temperature.")
-            return thing = "None"
-    return thing
+            return 1
+    return 0
+
+test_temperature()
