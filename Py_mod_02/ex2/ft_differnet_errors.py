@@ -1,19 +1,21 @@
 def garden_operation(operation_number) -> None:
     if operation_number == 0:
         result: int = int("abc")
+        print(result)
     elif operation_number == 1:
-        result: int = 10 / 0
+        n: float = 10 / 0
+        print(n)
     elif operation_number == 2:
         open("non_existent_file.txt", "r")
     elif operation_number == 3:
-        flower: dict[str, str | int] = {"name": "Rose", "color": "red", "count": 45}
+        flower: dict[str, str | int] = {"name": "Rose", "color": "red"}
         comunity = flower["blue"]
+        print(comunity)
     else:
         return
 
 
 def test_errors_types() -> None:
-    
     for i in range(5):
         print(f"Testing operation {i}...")
         try:
@@ -21,11 +23,19 @@ def test_errors_types() -> None:
         except ZeroDivisionError:
             print("Caught ZeroDivisionError: division by zero")
         except ValueError:
-            print("Caught ValueError: invalid literal for int() with base 10: 'abc'")
+            print(
+                "Caught ValueError: invalid literal "
+                "for int() with base 10: 'abc'"
+            )
         except FileNotFoundError:
-            print("Caught FileNotFoundError: [Errno 2] No such file or directory: 'non_existent_file.txt'")
+            print(
+                "Caught FileNotFoundError: "
+                "[Errno 2] No such file or directory: 'non_existent_file.txt'"
+            )
         except KeyError:
-            print("Caught KeyError: can only concatenate str (not 'int') to str")
+            print(
+                "Caught KeyError: 'blue' not found in dictionary"
+            )
     print("Operation complete successfully.")
     print("")
     print("All error types tested successfully.")
