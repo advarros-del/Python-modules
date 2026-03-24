@@ -20,30 +20,31 @@ class Plant:
         else:
             self.__age = value
 
-    def get_height(self) -> str:
-        return (f"Heigth updated: {self.__height}cm")
+    def get_height(self) -> int:
+        return self.__height
 
-    def get_age(self) -> str:
-        return (f"Age updated: {self.__age} days")
+    def get_age(self) -> int:
+        return self.__age
 
 
 def main() -> None:
     print("=== Garden Security System ===")
-    p1 = Plant("Rose", 25, 30)
-    p1._Plant__height = 15
-    p1._Plant__age = 10
-    print(f"Plant created: {p1.name}: {p1._Plant__height}cm, {p1._Plant__age} days old\n")
+    p1 = Plant("Rose", 15, 10)
+    print(
+        f"Plant created: {p1.name}: {p1.get_height()}cm, "
+        f" {p1.get_age()} days old\n"
+    )
     p1.set_height(25)
+    print(f"Height updated: {p1.get_height()}")
     p1.set_age(30)
-    msg: str = p1.get_height()
-    print(msg)
-    msg = p1.get_age()
-    print(msg)
-    print("")
+    print(f"Age updated: {p1.get_age()}\n")
     p1.set_height(-6)
     p1.set_age(-12)
     print("")
-    print(f"Current plant: {p1.name}: {p1._Plant__height}cm, {p1._Plant__age} days old")
+    print(
+        f"Current plant: {p1.name}: {p1.get_height()}cm, "
+        f"{p1.get_age()} days old"
+    )
 
 
 if __name__ == "__main__":

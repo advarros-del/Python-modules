@@ -2,12 +2,12 @@ class Plant:
     num_plants: int = 0
 
     def __init__(self, name: str, height: int, age: int):
-        self.name = name
-        self.height = height
-        self.age = age
+        self.name: str = name
+        self.height: int = height
+        self.age: int = age
 
 
-def printer_function(plant_variety) -> None:
+def printer_function(plant_variety: list[Plant]) -> None:
     for i in plant_variety:
         print(f"Created: {i.name} ({i.height}cm, {i.age} days)")
 

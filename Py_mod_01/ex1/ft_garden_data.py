@@ -4,31 +4,18 @@ class Plant:
         self.height = height
         self.age = age
 
-    def show() -> None:
-        p1 = Plant(
-            name="Rose",
-            height=25,
-            age=30,
-        )
-        p2 = Plant(
-            name="Sunflower",
-            height=80,
-            age=45,
-        )
-        p3 = Plant(
-            name="Cactus",
-            height=15,
-            age=120,
-        )
-        plants = [p1, p2, p3]
-        for i in range(3):
-            p = plants[i]
-            print(f"{p.name}: {p.height}cm, {p.age} days old.")
+    def show(self) -> None:
+        print(f"{self.name}: {self.height}cm, {self.age} days old.")
 
 
-def main():
+def main() -> None:
     print("=== Garden Plant Registry ===")
-    Plant.show()
+    p1 = Plant("Rose", 25, 30)
+    p2 = Plant("Sunflower", 80, 45)
+    p3 = Plant("Cactus", 15, 120)
+    plants: list[Plant] = [p1, p2, p3]
+    for p in plants:
+        p.show()
 
 
 if __name__ == "__main__":

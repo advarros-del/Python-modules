@@ -11,7 +11,7 @@ def ft_garden_intro() -> None:
     print("=== End of Program ===")
 
 
-def main():
+def main() -> None:
     ft_garden_intro()
 
 
