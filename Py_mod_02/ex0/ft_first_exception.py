@@ -5,28 +5,24 @@ def test_temperature() -> None:
     print("All test completed - program didn't crash!")
 
 
-def input_temperature(temp_str) -> int:
+def input_temperature(temp_str: str) -> int:
     print("")
     print(f"Input data: '{temp_str}'")
-    if ft_is_digit(temp_str) == 0:
-        print(f"Temperature is now {temp_str}")
-        return int(temp_str)
-    else:
+    try:
+        int(temp_str)
+    except ValueError:
         print(
             f"Caught inpu_temperature error: invalid"
             f"literal for int() with base 10: '{temp_str}'"
             )
         return 1
+    print(f"Temperature is now {temp_str}")
+    return int(temp_str)
 
 
-def ft_is_digit(thing: str) -> int:
-    i: str
-    for i in thing:
-        if i in "0123456789":
-            pass
-        else:
-            return 1
-    return 0
+def main() -> None:
+    test_temperature()
 
 
-test_temperature()
+if __name__ == "__main__":
+    main()

@@ -20,7 +20,7 @@ def test_temperature() -> None:
     print("All test completed - program didn't crash!")
 
 
-def input_temperature(temp_str) -> None:
+def input_temperature(temp_str: str) -> None:
     print("")
     print(f"Input data: '{temp_str}'")
     try:

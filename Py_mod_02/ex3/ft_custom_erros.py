@@ -1,6 +1,5 @@
 class GardenError(Exception):
-    def __init__(self, message: str):
-        super().__init__(message)
+    pass
 
 
 class PlantError(GardenError):
@@ -25,8 +24,7 @@ def custom_error_handler(plant_name: str) -> None:
         print(
             f"Caught PlantError: The {plant_name} plant is wilting."
         )
-    print("")
-    print("Testing WateringError...")
+    print("\nTesting WateringError...")
     try:
         raise WateringError("Caught WateringError: "
                             "Not enough water in the tank!.")
@@ -34,12 +32,15 @@ def custom_error_handler(plant_name: str) -> None:
         errors.append(e)
         print("Caught WateringError: "
               "Not enough water in the tank!.")
-    print("")
-    print("Testing caching all garden errors...")
+    print("\nTesting caching all garden errors...")
     for error in errors:
         print(f" - {error}")
-    print("")
-    print("All custom erros tyeps work correctly.")
+    print("\nAll custom erros tyeps work correctly.")
 
 
-custom_error_handler("Tomato")
+def main() -> None:
+    custom_error_handler("Tomato")
+
+
+if __name__ == "__main__":
+    main()
