@@ -103,18 +103,22 @@ class DataStream:
     def process_stream(self, stream: list[typing.Any]) -> None:
         for item in stream:
             for processor in self.processors:
+                processed: bool = False
+                if processor.validate(item):
+                    processor.ingest(item)
+                    processed = True
+                    break
+            if not processed:
                 try:
-                    if processor.validate(item):
-                        processor.ingest(item)
-                        break
+                    raise ValueError("Datastream error - Can't process in stream: " + str(item))
                 except ValueError as e:
-                    print(f"Datastream error - Can't process in stream: {item}")
+                    print(e)
 
     def print_processors_stats(self) -> None:
+        print("=== DataStream statistics ===")
         if not self.processors:
             print("No processors found, not data")
             return
-        print("=== DataStream statistics ===")
         for processor in self.processors:
             print(f"{processor.__class__.__name__}: total {processor.counter} items processed, remaining {len(processor.queue)} on processor)")
 
@@ -128,12 +132,17 @@ def main() -> None:
     text_processor = TextProcessor(0, 0, [])
     log_processor = LogProcessor(0, 0, [])
     data_stream.register_processor(numeric_processor)
-    data_stream.register_processor(text_processor)
-    data_stream.register_processor(log_processor)
     random_data = ["Hello world", [3.14, -1, 2.71], [{"log_level": "WARNING", "log_message": "Telnet access! Use ssh instead"}, {"log_level": "INFO", "log_message": "User will is connected"}], 42, ["Hi", "five"]]
     print(f"Send first batch of data on stream: {random_data}")
     data_stream.process_stream(random_data)
     data_stream.print_processors_stats()
+    print("\nRegistering other data processors")
+    data_stream.register_processor(text_processor)
+    data_stream.register_processor(log_processor)
+    print("Send the same batch again")
+    data_stream.process_stream(random_data)
+    data_stream.print_processors_stats()
+    print("\nConsume some elements from the data processsors: Numeric 3, Text 2, Log 1")
     for _ in range(3):
         data_stream.processors[0].output()
     for _ in range(2):

@@ -42,5 +42,6 @@ def main() -> None:
     else:
         print("Not saving data")
 
+
 if __name__ == "__main__":
     main()

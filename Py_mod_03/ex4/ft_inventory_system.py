@@ -1,5 +1,6 @@
 import sys
 
+
 def main() -> None:
     print("=== Inventory System Analysis ===")
     items: dict[str, int] = {}
@@ -21,27 +22,27 @@ def main() -> None:
     print(f"Got inventory: {items}")
     aux: list = list(items.keys())
     print(f"Item list: {aux}")
-    nums: list = items.values()
-    total: int = sum(nums)
+    total: int = sum(items.values())
     print(f"Total quantity of the {len(items)} items: {total}")
-    percent: int = 0
+    percent: float = 0
     for item in items:
         percent = (items[item] / total) * 100
         print(f"Item {item} represents {round(percent, 1)}%")
-    most: dict[str,int] = {"name": "", "quantity": -1}
+    most: dict[str, str | int] = {"name": "", "quantity": -1}
     for item in items:
-        if items[item] > most["quantity"]:
+        if items[item] > int(most["quantity"]):
             most = {"name": item, "quantity": items[item]}
-    print (f"Item most abundant: {most['name']} with quantity {most['quantity'] }")
-    smallest: dict[str,int] = {"name": "", "quantity": 2147483647}
+    print(f"Item most abundant: "
+          f"{most['name']} with quantity {most['quantity'] }")
+    smallest: dict[str, str | int] = {"name": "", "quantity": 2147483647}
     for item in items:
-        if items[item] < smallest["quantity"]:
+        if items[item] < int(smallest["quantity"]):
             smallest = {"name": item, "quantity": items[item]}
-    print (f"Item least abundant: {smallest['name']} with quantity {smallest['quantity'] }")
+    print(f"Item least abundant: {smallest['name']}"
+          f"with quantity {smallest['quantity']}")
     items.update({"magic_item": 1})
     print(f"Updated inventory: {items}")
 
 
 if __name__ == "__main__":
     main()
-        

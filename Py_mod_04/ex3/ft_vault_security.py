@@ -1,4 +1,5 @@
-def secure_archive(archive_path: str, binary:int, str: str) -> tuple[bool, str]:
+def secure_archive(archive_path: str,
+                   binary: int, str: str) -> tuple[bool, str]:
     if binary == 0:
         try:
             with open(archive_path, "r") as f:
@@ -24,7 +25,7 @@ def main() -> None:
     result:tuple[bool, str] = secure_archive("/non/existent/file", 0, "")
     print(f"{result}\n")
     print("Using 'secure_archive' to read from an inaccessible file:")
-    result = secure_archive("/etc/master.passwd", 0, "")
+    result = secure_archive("inaccessible_file.txt", 0, "")
     print(f"{result}\n")
     print("Using 'secure_archive' to read from a regular file:")
     result = secure_archive("ancient_fragment.txt", 0, "")

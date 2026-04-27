@@ -20,5 +20,6 @@ def main() -> None:
     except PermissionError as e:
         print(f"Error opening file '{sys.argv[1]}': {e}")
 
+
 if __name__ == "__main__":
     main()

@@ -43,11 +43,13 @@ def main() -> None:
             new_file.close()
             print(f"Data saved in file '{file_name}'.")
         except PermissionError as e:
-            sys.stderr.write(f"[STDERR] Error opening file '{new_file}': {e}\nData not saved.")
+            sys.stderr.write(f"[STDERR] Error opening file "
+                             f"'{new_file}': {e}\nData not saved.")
 #        except NameError as e:
 #            sys.stderr.write(f"Error: Invalid file name '{new_file}': {e}\nNot saving data")
     else:
         print("Not saving data")
+
 
 if __name__ == "__main__":
     main()
