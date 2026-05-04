@@ -7,6 +7,7 @@ def printer() -> None:
 
 def main() -> None: 
     print("=== Destillation 1 ===")
+    print("Using: 'import alchemy' structure to access potions")
     printer()
 
 if __name__ == "__main__":
