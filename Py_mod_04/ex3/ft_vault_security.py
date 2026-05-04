@@ -4,16 +4,14 @@ def secure_archive(archive_path: str,
         try:
             with open(archive_path, "r") as f:
                 content:str = f.read()
-        except FileNotFoundError as e:
-            return (False, f"{e}")
-        except PermissionError as e:
+        except (OSError, ValueError) as e:
             return (False, f"{e}")
         return (True, content)
     else:
         try:
             with open(archive_path, "w") as f:
                 f.write(str)
-        except PermissionError as e:
+        except (OSError, ValueError) as e:
             return (False, f"{e}")
         return (True, "Content successfully written to file")
             

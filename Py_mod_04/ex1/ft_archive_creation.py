@@ -16,9 +16,7 @@ def main() -> None:
         f.close()
         print("\n---")
         print(f"File '{sys.argv[1]}' closed.")
-    except FileNotFoundError as e:
-        print(f"Error opening file '{sys.argv[1]}': {e}")
-    except PermissionError as e:
+    except (OSError, ValueError) as e:
         print(f"Error opening file '{sys.argv[1]}': {e}")
     print("\nTransform data:\n---\n")
     final_text: str = ""
