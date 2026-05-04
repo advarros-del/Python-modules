@@ -16,9 +16,7 @@ def main() -> None:
         f.close()
         print("\n---")
         print(f"File '{sys.argv[1]}' closed.")
-    except FileNotFoundError as e:
-        print(f"Error opening file '{sys.argv[1]}': {e}")
-    except PermissionError as e:
+    except (Exception) as e:
         print(f"Error opening file '{sys.argv[1]}': {e}")
     print("\nTransform data:\n---\n")
     final_text: str = ""
@@ -42,7 +40,7 @@ def main() -> None:
             new_file.write(final_text)
             new_file.close()
             print(f"Data saved in file '{file_name}'.")
-        except PermissionError as e:
+        except (PermissionError, UnicodeEncodeError) as e:
             sys.stderr.write(f"[STDERR] Error opening file "
                              f"'{new_file}': {e}\nData not saved.")
 #        except NameError as e:

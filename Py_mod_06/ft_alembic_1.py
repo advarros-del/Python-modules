@@ -1,4 +1,4 @@
-from elements import create_fire, create_water
+from elements import create_water
 
 def printer() -> None:
     print(f"Testing create_water: {create_water()}")

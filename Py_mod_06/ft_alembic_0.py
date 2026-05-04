@@ -1,7 +1,7 @@
 import elements
 
 def printer() -> None:
-    print(f"Testing create_fire: {create_fire()}")
+    print(f"Testing create_fire: {elements.create_fire()}")
 
 def main() -> None:
     print("=== Alembic 0 ===")
