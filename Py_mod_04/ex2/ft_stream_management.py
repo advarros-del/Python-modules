@@ -12,15 +12,16 @@ def main() -> None:
         f: typing.IO = open(sys.argv[1], "r")
         print("---\n")
         try:
-            copy: typing.IO = f.read()
+            copy: str = f.read()
             print(copy)
         finally:
             f.close()
             print("\n---")
             print(f"File '{sys.argv[1]}' closed.")
-        
+
     except (OSError, ValueError) as e:
         sys.stderr.write(f"[STDERR] Error opening file '{sys.argv[1]}': {e}\n")
+        return
     print("\nTransform data:\n---\n")
     final_text: str = ""
     for i in range(len(copy)):
@@ -37,9 +38,9 @@ def main() -> None:
         print(f"Saving data to {new_file}")
         try:
             file_name: str = new_file
-            new_file: typing.IO = open(new_file, "w")
-            new_file.write(final_text)
-            new_file.close()
+            new_new_file: typing.IO = open(new_file, "w")
+            new_new_file.write(final_text)
+            new_new_file.close()
             print(f"Data saved in file '{file_name}'.")
         except (OSError, ValueError) as e:
             sys.stderr.write(f"[STDERR] Error opening file "
