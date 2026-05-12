@@ -2,33 +2,38 @@ import abc
 import typing
 from typing import Any
 
+
 class DataProcessor(abc.ABC):
     def __init__(self, data: Any, counter: int, queue: list) -> None:
         self.counter = counter
         self.queue = queue
 
     @abc.abstractmethod
-    def validate(self, data:Any) -> bool:
+    def validate(self, data: Any) -> bool:
         pass
 
     @abc.abstractmethod
-    def ingest(self, data:Any) -> None:
+    def ingest(self, data: Any) -> None:
         pass
 
     def output(self) -> tuple[int, str]:
-        return (self.code, str(self.data)) 
+        aux: tuple[int, str] = self.queue.pop(0)
+        return aux
 
 
-class NumericProcessor(DataProcessor):    
+class NumericProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
-        if isinstance (data, (int, float)):
+        if isinstance(data, (int, float)):
             return True
-        if isinstance(data, list) and all(isinstance(item, (int, float)) for item in data):
+        if isinstance(data, list) and all(
+            isinstance(item, (int, float)) for item in data
+        ):
             return True
         else:
             return False
+
     def ingest(self, data) -> None:
-        if self.validate(data) == True:
+        if self.validate(data) is True:
             if isinstance(data, list):
                 for item in data:
                     self.queue.append((self.counter, [str(item)]))
@@ -38,21 +43,21 @@ class NumericProcessor(DataProcessor):
                 self.counter += 1
         else:
             raise ValueError("Got exception: Improper numeric data")
-    def output(self) -> tuple[int, str]:
-        aux: tuple[int, str] = self.queue.pop(0)
-        return aux
 
 
 class TextProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
         if isinstance(data, str):
             return True
-        if isinstance(data, list) and all(isinstance(item, str) for item in data):
+        if isinstance(data, list) and all(
+            isinstance(item, str) for item in data
+        ):
             return True
         else:
             return False
+
     def ingest(self, data) -> None:
-        if self.validate(data) == True:
+        if self.validate(data) is True:
             if isinstance(data, list):
                 for item in data:
                     self.queue.append((self.counter, [str(item)]))
@@ -62,41 +67,42 @@ class TextProcessor(DataProcessor):
                 self.counter += 1
         else:
             raise ValueError("Got exception: Improper text data")
-    def output(self) -> tuple[int, str]:
-        aux: tuple[int, str] = self.queue.pop(0)
-        return aux
 
 
 class LogProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
         if isinstance(data, dict) and len(data) == 2:
             return True
-        if isinstance(data, list) and all(isinstance(item, dict) and len(item) == 2 for item in data):
+        if isinstance(data, list) and all(
+            isinstance(item, dict) and len(item) == 2 for item in data
+        ):
             return True
         else:
             return False
+
     def ingest(self, data) -> None:
-        if self.validate(data) == True:
+        clear_text: str
+        if self.validate(data) is True:
             if isinstance(data, list):
                 for item in data:
-                    clear_text: str = ", ".join([f"{key}: {value}" for key, value in item.items()])
+                    clear_text = ", ".join(
+                        [f"{key}: {value}" for key, value in item.items()])
                     self.queue.append((self.counter, clear_text))
                     self.counter += 1
             else:
-                clear_text: str = ", ".join([f"{key}: {value}" for key, value in data.items()])
+                clear_text = ", ".join(
+                    [f"{key}: {value}" for key, value in data.items()])
                 self.queue.append((self.counter, clear_text))
                 self.counter += 1
         else:
             raise ValueError("Got exception: Improper log data")
-    def output(self) -> tuple[int, str]:
-        aux: tuple[int, str] = self.queue.pop(0)
-        return aux
+
 
 class DataStream:
     def __init__(self) -> None:
         self.processors: list[DataProcessor] = []
-        self.class_list = [NumericProcessor, TextProcessor, LogProcessor]   
-    
+        self.class_list = [NumericProcessor, TextProcessor, LogProcessor]
+
     def register_processor(self, proc: DataProcessor) -> None:
         self.processors.append(proc)
 
@@ -110,7 +116,9 @@ class DataStream:
                     break
             if not processed:
                 try:
-                    raise ValueError("Datastream error - Can't process in stream: " + str(item))
+                    raise ValueError(
+                        "Datastream error - Can't process in stream: "
+                        + str(item))
                 except ValueError as e:
                     print(e)
 
@@ -120,7 +128,10 @@ class DataStream:
             print("No processors found, not data")
             return
         for processor in self.processors:
-            print(f"{processor.__class__.__name__}: total {processor.counter} items processed, remaining {len(processor.queue)} on processor)")
+            print(f"{processor.__class__.__name__}: total {processor.counter}"
+                  f" items processed, remaining "
+                  f"{len(processor.queue)} on processor)")
+
 
 def main() -> None:
     print("=== Code Nexux - Data Stream ===\n")
@@ -132,7 +143,15 @@ def main() -> None:
     text_processor = TextProcessor(0, 0, [])
     log_processor = LogProcessor(0, 0, [])
     data_stream.register_processor(numeric_processor)
-    random_data = ["Hello world", [3.14, -1, 2.71], [{"log_level": "WARNING", "log_message": "Telnet access! Use ssh instead"}, {"log_level": "INFO", "log_message": "User will is connected"}], 42, ["Hi", "five"]]
+    random_data = [
+        "Hello world",
+        [3.14, -1, 2.71],
+        [{
+            "log_level": "WARNING",
+            "log_message": "Telnet access! Use ssh instead"},
+         {"log_level": "INFO", "log_message": "User will is connected"}],
+        42,
+        ["Hi", "five"]]
     print(f"Send first batch of data on stream: {random_data}")
     data_stream.process_stream(random_data)
     data_stream.print_processors_stats()
@@ -142,7 +161,8 @@ def main() -> None:
     print("Send the same batch again")
     data_stream.process_stream(random_data)
     data_stream.print_processors_stats()
-    print("\nConsume some elements from the data processsors: Numeric 3, Text 2, Log 1")
+    print("\nConsume some elements from the data processsors:"
+          " Numeric 3, Text 2, Log 1")
     for _ in range(3):
         data_stream.processors[0].output()
     for _ in range(2):
@@ -150,7 +170,7 @@ def main() -> None:
     for _ in range(1):
         data_stream.processors[2].output()
     data_stream.print_processors_stats()
-        
-    
+
+
 if __name__ == "__main__":
     main()

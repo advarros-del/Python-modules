@@ -3,18 +3,22 @@ import typing
 from typing import Any
 from typing import Protocol
 
+
 class ExportPlugin(Protocol):
     def process_output(self, data: list[tuple[int, str]]) -> None:
         ...
+
 
 class CSVPlugin:
     def process_output(self, data: list[tuple[int, str]]) -> None:
         print("CSV Output")
         print(", ".join([item[1] for item in data]))
 
+
 class JSONPlugin:
     def process_output(self, data: list[tuple[int, str]]) -> None:
-            print(", ".join([f'{{"item_{id}": "{text}"}}' for id, text in data]))
+        print(", ".join(
+            [f'{{"item_{id}": "{text}"}}' for id, text in data]))
 
 
 class DataProcessor(abc.ABC):
@@ -23,27 +27,31 @@ class DataProcessor(abc.ABC):
         self.queue = queue
 
     @abc.abstractmethod
-    def validate(self, data:Any) -> bool:
+    def validate(self, data: Any) -> bool:
         pass
 
     @abc.abstractmethod
-    def ingest(self, data:Any) -> None:
+    def ingest(self, data: Any) -> None:
         pass
 
     def output(self) -> tuple[int, str]:
-        return (self.code, str(self.data)) 
+        aux: tuple[int, str] = self.queue.pop(0)
+        return aux
 
 
-class NumericProcessor(DataProcessor):    
+class NumericProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
-        if isinstance (data, (int, float)):
+        if isinstance(data, (int, float)):
             return True
-        if isinstance(data, list) and all(isinstance(item, (int, float)) for item in data):
+        if isinstance(data, list) and all(
+            isinstance(item, (int, float)) for item in data
+        ):
             return True
         else:
             return False
+
     def ingest(self, data) -> None:
-        if self.validate(data) == True:
+        if self.validate(data) is True:
             if isinstance(data, list):
                 for item in data:
                     self.queue.append((self.counter, str(item)))
@@ -53,21 +61,21 @@ class NumericProcessor(DataProcessor):
                 self.counter += 1
         else:
             raise ValueError("Got exception: Improper numeric data")
-    def output(self) -> tuple[int, str]:
-        aux: tuple[int, str] = self.queue.pop(0)
-        return aux
 
 
 class TextProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
         if isinstance(data, str):
             return True
-        if isinstance(data, list) and all(isinstance(item, str) for item in data):
+        if isinstance(data, list) and all(
+            isinstance(item, str) for item in data
+        ):
             return True
         else:
             return False
+
     def ingest(self, data) -> None:
-        if self.validate(data) == True:
+        if self.validate(data) is True:
             if isinstance(data, list):
                 for item in data:
                     self.queue.append((self.counter, str(item)))
@@ -77,43 +85,42 @@ class TextProcessor(DataProcessor):
                 self.counter += 1
         else:
             raise ValueError("Got exception: Improper text data")
-    def output(self) -> tuple[int, str]:
-        aux: tuple[int, str] = self.queue.pop(0)
-        return aux
 
 
 class LogProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
         if isinstance(data, dict) and len(data) == 2:
             return True
-        if isinstance(data, list) and all(isinstance(item, dict) and len(item) == 2 for item in data):
+        if isinstance(data, list) and all(
+            isinstance(item, dict) and len(item) == 2 for item in data
+        ):
             return True
         else:
             return False
+
     def ingest(self, data) -> None:
-        if self.validate(data) == True:
+        if self.validate(data) is True:
+            clear_text: str
             if isinstance(data, list):
                 for item in data:
                     both_values = list(item.values())
-                    clear_text: str = f"{both_values[0]}: {both_values[1]}" 
+                    clear_text = f"{both_values[0]}: {both_values[1]}"
                     self.queue.append((self.counter, clear_text))
                     self.counter += 1
             else:
-                both_values = list(item.values())
-                clear_text: str = f"{both_values[0]}: {both_values[1]}"
+                both_values = list(data.values())
+                clear_text = f"{both_values[0]}: {both_values[1]}"
                 self.queue.append((self.counter, clear_text))
                 self.counter += 1
         else:
             raise ValueError("Got exception: Improper log data")
-    def output(self) -> tuple[int, str]:
-        aux: tuple[int, str] = self.queue.pop(0)
-        return aux
+
 
 class DataStream:
     def __init__(self) -> None:
         self.processors: list[DataProcessor] = []
-        self.class_list = [NumericProcessor, TextProcessor, LogProcessor]   
-    
+        self.class_list = [NumericProcessor, TextProcessor, LogProcessor]
+
     def register_processor(self, proc: DataProcessor) -> None:
         self.processors.append(proc)
 
@@ -127,18 +134,19 @@ class DataStream:
                     break
             if not processed:
                 try:
-                    raise ValueError("Datastream error - Can't process in stream: " + str(item))
+                    raise ValueError(
+                        "Datastream error - Can't process in stream: "
+                        + str(item))
                 except ValueError as e:
                     print(e)
 
     def output_pipeline(self, nb: int, plugin: ExportPlugin) -> None:
         for processor in self.processors:
-            data_export: list[str] = []
+            data_export: list[tuple[int, str]] = []
             for n in range(nb):
                 if processor.queue:
                     data_export.append(processor.output())
             plugin.process_output(data_export)
-
 
     def print_processors_stats(self) -> None:
         print("=== DataStream statistics ===")
@@ -146,7 +154,10 @@ class DataStream:
             print("No processors found, not data")
             return
         for processor in self.processors:
-            print(f"{processor.__class__.__name__}: total {processor.counter} items processed, remaining {len(processor.queue)} on processor)")
+            print(
+                f"{processor.__class__.__name__}: total "
+                f"{processor.counter} items processed, remaining"
+                f"{len(processor.queue)} on processor)")
 
 
 def main() -> None:
@@ -161,7 +172,16 @@ def main() -> None:
     data_stream.register_processor(numeric_processor)
     data_stream.register_processor(text_processor)
     data_stream.register_processor(log_processor)
-    random_data = ["Hello world", [3.14, -1, 2.71], [{"log_level": "WARNING", "log_message": "Telnet access! Use ssh instead"}, {"log_level": "INFO", "log_message": "User will is connected"}], 42, ["Hi", "five"]]
+    random_data = [
+        "Hello world",
+        [3.14, -1, 2.71],
+        [
+            {"log_level": "WARNING",
+             "log_message": "Telnet access! Use ssh instead"},
+            {"log_level": "INFO",
+             "log_message": "User will is connected"}],
+        42,
+        ["Hi", "five"]]
     print(f"\nSend first batch of data on stream: {random_data}\n")
     data_stream.process_stream(random_data)
     data_stream.print_processors_stats()
@@ -169,7 +189,14 @@ def main() -> None:
     csv_plugin = CSVPlugin()
     data_stream.output_pipeline(3, csv_plugin)
     data_stream.print_processors_stats()
-    random_data2 = [21, ['I love AI', 'LLMs are wonderful', 'Stay healthy'], [{'log_level': 'ERROR', 'log_message': '500 server crash'}, {'log_level': 'NOTICE', 'log_message': 'Certificate expires in 10 days'}], [32, 42, 64, 84, 128, 168], 'World hello']
+    random_data2 = [
+        21,
+        ['I love AI', 'LLMs are wonderful', 'Stay healthy'],
+        [
+            {'log_level': 'ERROR', 'log_message': '500 server crash'},
+            {'log_level': 'NOTICE',
+             'log_message': 'Certificate expires in 10 days'}],
+        [32, 42, 64, 84, 128, 168], 'World hello']
     print(f"Send another batch of data: {random_data2}\n")
     data_stream.process_stream(random_data2)
     data_stream.print_processors_stats()
@@ -177,7 +204,7 @@ def main() -> None:
     print("\nSend 5 processed data from each processor to JSON plugin:")
     data_stream.output_pipeline(5, json_plugin)
     data_stream.print_processors_stats()
-        
-    
+
+
 if __name__ == "__main__":
     main()

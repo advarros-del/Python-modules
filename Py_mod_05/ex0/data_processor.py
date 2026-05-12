@@ -2,17 +2,18 @@ import abc
 import typing
 from typing import Any
 
+
 class DataProcessor(abc.ABC):
-    def __init__(self, data: Any, counter: int, queue: list) -> None:
+    def __init__(self, data: typing.Any, counter: int, queue: list) -> None:
         self.counter = counter
         self.queue = queue
 
     @abc.abstractmethod
-    def validate(self, data:Any) -> bool:
+    def validate(self, data: Any) -> bool:
         pass
 
     @abc.abstractmethod
-    def ingest(self, data:Any) -> None:
+    def ingest(self, data: Any) -> None:
         pass
 
     def output(self) -> tuple[int, str]:
@@ -20,16 +21,19 @@ class DataProcessor(abc.ABC):
         return aux
 
 
-class NumericProcessor(DataProcessor):    
+class NumericProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
-        if isinstance (data, (int, float)):
+        if isinstance(data, (int, float)):
             return True
-        if isinstance(data, list) and all(isinstance(item, (int, float)) for item in data):
+        if isinstance(data, list) and all(
+            isinstance(item, (int, float)) for item in data
+        ):
             return True
         else:
             return False
+
     def ingest(self, data) -> None:
-        if self.validate(data) == True:
+        if self.validate(data) is True:
             if isinstance(data, list):
                 for item in data:
                     self.queue.append((self.counter, [str(item)]))
@@ -45,12 +49,15 @@ class TextProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
         if isinstance(data, str):
             return True
-        if isinstance(data, list) and all(isinstance(item, str) for item in data):
+        if isinstance(data, list) and all(
+            isinstance(item, str) for item in data
+        ):
             return True
         else:
             return False
+
     def ingest(self, data) -> None:
-        if self.validate(data) == True:
+        if self.validate(data) is True:
             if isinstance(data, list):
                 for item in data:
                     self.queue.append((self.counter, str(item)))
@@ -66,19 +73,25 @@ class LogProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
         if isinstance(data, dict) and len(data) == 2:
             return True
-        if isinstance(data, list) and all(isinstance(item, dict) and len(item) == 2 for item in data):
+        if isinstance(data, list) and all(
+            isinstance(item, dict) and len(item) == 2 for item in data
+        ):
             return True
         else:
             return False
+
     def ingest(self, data) -> None:
-        if self.validate(data) == True:
+        clear_text: str
+        if self.validate(data) is True:
             if isinstance(data, list):
                 for item in data:
-                    clear_text: str = ", ".join([f"{key}: {value}" for key, value in item.items()])
+                    clear_text = ", ".join(
+                        [f"{key}: {value}" for key, value in item.items()])
                     self.queue.append((self.counter, clear_text))
                     self.counter += 1
             else:
-                clear_text: str = ", ".join([f"{key}: {value}" for key, value in data.items()])
+                clear_text = ", ".join(
+                    [f"{key}: {value}" for key, value in data.items()])
                 self.queue.append((self.counter, clear_text))
                 self.counter += 1
         else:
@@ -91,19 +104,24 @@ def main() -> None:
     text_queue = TextProcessor("", 0, [])
     log_queue = LogProcessor({}, 0, [])
     number: int = 42
-    number2:str = "Hello"
+    number2: str = "Hello"
     text: int = 42
     log: str = "Hello"
     foo_thing: str = "foo"
     numeric_list: list = [1, 2, 3, 4, 5]
     text_list: list = ["Hello", "Nexus", "World"]
-    Log_list: list = [{'log_level': 'NOTICE', 'log_message': 'Connection to server',}, {'log_level': 'ERROR', 'log_message': 'Unauthorized access!!'}]
+    Log_list: list = [
+        {'log_level': 'NOTICE', 'log_message': 'Connection to server'},
+        {'log_level': 'ERROR', 'log_message': 'Unauthorized access!!'}]
     i: int = 0
     print("Testing Numeric Processor...")
-    print(f" Trying to validate input '{number}': {numeric_queue.validate(number)} ")
-    print(f" Trying to validate input '{number2}': {numeric_queue.validate(number2)} ")
+    print(f" Trying to validate input '{number}': "
+          f"{numeric_queue.validate(number)} ")
+    print(f" Trying to validate input '{number2}': "
+          f"{numeric_queue.validate(number2)} ")
     try:
-        print(f" Testing invalid ingestion on string '{foo_thing}' without validation:")
+        print(f" Testing invalid ingestion on string "
+              f"'{foo_thing}' without validation:")
         numeric_queue.ingest(foo_thing)
     except ValueError as e:
         print(f" {e}")
@@ -111,7 +129,7 @@ def main() -> None:
     numeric_queue.validate(numeric_list)
     numeric_queue.ingest(numeric_list)
     print(" Extracting 3 values ...")
-    h: dict
+    h: tuple
     while i < 3:
         h = numeric_queue.output()
         print(f" Numeric value {h[0]}: {h[1]}")
@@ -137,7 +155,8 @@ def main() -> None:
     while i < 2:
         h = log_queue.output()
         print(f" Log value {h[0]}: {h[1]}")
-        i += 1    
-    
+        i += 1
+
+
 if __name__ == "__main__":
     main()
