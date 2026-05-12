@@ -9,21 +9,13 @@ class ExportPlugin(Protocol):
 
 class CSVPlugin:
     def process_output(self, data: list[tuple[int, str]]) -> None:
-        last_id: int = None
-        final_txt: str = ""
-        for id, text in data:
-            if last_id is not None and id != last_id:
-                final_txt = final_txt + "\n"
-            else :
-                final_txt += f"{text.strip(", ")}, "
-            last_id = id
-        print(final_txt.rstrip(", "))
+        print("CSV Output")
+        print(", ".join([item[1] for item in data]))
 
 class JSONPlugin:
     def process_output(self, data: list[tuple[int, str]]) -> None:
-        for id, text in data:
-            print(f'{{"item_{id}": "{text}"}}')
-        
+            print(", ".join([f'{{"item_{id}": "{text}"}}' for id, text in data]))
+
 
 class DataProcessor(abc.ABC):
     def __init__(self, data: Any, counter: int, queue: list) -> None:
@@ -54,7 +46,7 @@ class NumericProcessor(DataProcessor):
         if self.validate(data) == True:
             if isinstance(data, list):
                 for item in data:
-                    self.queue.append((self.counter, [str(item)]))
+                    self.queue.append((self.counter, str(item)))
                     self.counter += 1
             else:
                 self.queue.append((self.counter, str(data)))
@@ -78,7 +70,7 @@ class TextProcessor(DataProcessor):
         if self.validate(data) == True:
             if isinstance(data, list):
                 for item in data:
-                    self.queue.append((self.counter, [str(item)]))
+                    self.queue.append((self.counter, str(item)))
                     self.counter += 1
             else:
                 self.queue.append((self.counter, str(data)))
@@ -102,12 +94,14 @@ class LogProcessor(DataProcessor):
         if self.validate(data) == True:
             if isinstance(data, list):
                 for item in data:
-                    texto_limpio: str = ", ".join([f"{key}: {value}" for key, value in item.items()])
-                    self.queue.append((self.counter, texto_limpio))
+                    both_values = list(item.values())
+                    clear_text: str = f"{both_values[0]}: {both_values[1]}" 
+                    self.queue.append((self.counter, clear_text))
                     self.counter += 1
             else:
-                texto_limpio: str = ", ".join([f"{key}: {value}" for key, value in data.items()])
-                self.queue.append((self.counter, texto_limpio))
+                both_values = list(item.values())
+                clear_text: str = f"{both_values[0]}: {both_values[1]}"
+                self.queue.append((self.counter, clear_text))
                 self.counter += 1
         else:
             raise ValueError("Got exception: Improper log data")
@@ -125,8 +119,8 @@ class DataStream:
 
     def process_stream(self, stream: list[typing.Any]) -> None:
         for item in stream:
+            processed: bool = False
             for processor in self.processors:
-                processed: bool = False
                 if processor.validate(item):
                     processor.ingest(item)
                     processed = True
@@ -138,14 +132,14 @@ class DataStream:
                     print(e)
 
     def output_pipeline(self, nb: int, plugin: ExportPlugin) -> None:
-        data_export: list[tuple[int, str]] = []
         for processor in self.processors:
+            data_export: list[str] = []
             for n in range(nb):
                 if processor.queue:
                     data_export.append(processor.output())
-        plugin.process_output(data_export)
-    
-    
+            plugin.process_output(data_export)
+
+
     def print_processors_stats(self) -> None:
         print("=== DataStream statistics ===")
         if not self.processors:
@@ -153,7 +147,7 @@ class DataStream:
             return
         for processor in self.processors:
             print(f"{processor.__class__.__name__}: total {processor.counter} items processed, remaining {len(processor.queue)} on processor)")
-    
+
 
 def main() -> None:
     print("=== Code Nexux - Data Stream ===\n")
@@ -168,7 +162,7 @@ def main() -> None:
     data_stream.register_processor(text_processor)
     data_stream.register_processor(log_processor)
     random_data = ["Hello world", [3.14, -1, 2.71], [{"log_level": "WARNING", "log_message": "Telnet access! Use ssh instead"}, {"log_level": "INFO", "log_message": "User will is connected"}], 42, ["Hi", "five"]]
-    print(f"Send first batch of data on stream: {random_data}\n")
+    print(f"\nSend first batch of data on stream: {random_data}\n")
     data_stream.process_stream(random_data)
     data_stream.print_processors_stats()
     print("\nSend 3 processed data from each processor to CSV plugin:")

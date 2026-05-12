@@ -79,12 +79,12 @@ class LogProcessor(DataProcessor):
         if self.validate(data) == True:
             if isinstance(data, list):
                 for item in data:
-                    texto_limpio: str = ", ".join([f"{key}: {value}" for key, value in item.items()])
-                    self.queue.append((self.counter, texto_limpio))
+                    clear_text: str = ", ".join([f"{key}: {value}" for key, value in item.items()])
+                    self.queue.append((self.counter, clear_text))
                     self.counter += 1
             else:
-                texto_limpio: str = ", ".join([f"{key}: {value}" for key, value in data.items()])
-                self.queue.append((self.counter, texto_limpio))
+                clear_text: str = ", ".join([f"{key}: {value}" for key, value in data.items()])
+                self.queue.append((self.counter, clear_text))
                 self.counter += 1
         else:
             raise ValueError("Got exception: Improper log data")

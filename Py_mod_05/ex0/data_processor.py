@@ -16,7 +16,8 @@ class DataProcessor(abc.ABC):
         pass
 
     def output(self) -> tuple[int, str]:
-        return (self.code, str(self.data)) 
+        aux: tuple[int, str] = self.queue.pop(0)
+        return aux
 
 
 class NumericProcessor(DataProcessor):    
@@ -38,9 +39,6 @@ class NumericProcessor(DataProcessor):
                 self.counter += 1
         else:
             raise ValueError("Got exception: Improper numeric data")
-    def output(self) -> tuple[int, str]:
-        aux: tuple[int, str] = self.queue.pop(0)
-        return aux
 
 
 class TextProcessor(DataProcessor):
@@ -55,16 +53,13 @@ class TextProcessor(DataProcessor):
         if self.validate(data) == True:
             if isinstance(data, list):
                 for item in data:
-                    self.queue.append((self.counter, [str(item)]))
+                    self.queue.append((self.counter, str(item)))
                     self.counter += 1
             else:
                 self.queue.append((self.counter, str(data)))
                 self.counter += 1
         else:
             raise ValueError("Got exception: Improper text data")
-    def output(self) -> tuple[int, str]:
-        aux: tuple[int, str] = self.queue.pop(0)
-        return aux
 
 
 class LogProcessor(DataProcessor):
@@ -79,18 +74,15 @@ class LogProcessor(DataProcessor):
         if self.validate(data) == True:
             if isinstance(data, list):
                 for item in data:
-                    texto_limpio: str = ", ".join([f"{key}: {value}" for key, value in item.items()])
-                    self.queue.append((self.counter, texto_limpio))
+                    clear_text: str = ", ".join([f"{key}: {value}" for key, value in item.items()])
+                    self.queue.append((self.counter, clear_text))
                     self.counter += 1
             else:
-                texto_limpio: str = ", ".join([f"{key}: {value}" for key, value in data.items()])
-                self.queue.append((self.counter, texto_limpio))
+                clear_text: str = ", ".join([f"{key}: {value}" for key, value in data.items()])
+                self.queue.append((self.counter, clear_text))
                 self.counter += 1
         else:
             raise ValueError("Got exception: Improper log data")
-    def output(self) -> tuple[int, str]:
-        aux: tuple[int, str] = self.queue.pop(0)
-        return aux
 
 
 def main() -> None:
@@ -108,10 +100,10 @@ def main() -> None:
     Log_list: list = [{'log_level': 'NOTICE', 'log_message': 'Connection to server',}, {'log_level': 'ERROR', 'log_message': 'Unauthorized access!!'}]
     i: int = 0
     print("Testing Numeric Processor...")
-    print(f" Trying to validate input {number}: {numeric_queue.validate(number)} ")
-    print(f" Trying to validate input {number2}: {numeric_queue.validate(number2)} ")
+    print(f" Trying to validate input '{number}': {numeric_queue.validate(number)} ")
+    print(f" Trying to validate input '{number2}': {numeric_queue.validate(number2)} ")
     try:
-        print(f" Testing invalid ingestion on string {foo_thing} without validation:")
+        print(f" Testing invalid ingestion on string '{foo_thing}' without validation:")
         numeric_queue.ingest(foo_thing)
     except ValueError as e:
         print(f" {e}")
@@ -132,8 +124,8 @@ def main() -> None:
     print(" Extracting 1 value...")
     i = 0
     while i < 1:
-        h = text_queue.output()
-        print(f" Text value {h[0]}: {h[1]}")
+        index, data = text_queue.output()
+        print(f" Text value {index}: {data}")
         i += 1
     print("\nTesting Log Processor...")
     print(f" Trying to validate input {log}: {log_queue.validate(log)} ")
