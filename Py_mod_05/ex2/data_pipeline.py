@@ -157,7 +157,7 @@ class DataStream:
             print(
                 f"{processor.__class__.__name__}: total "
                 f"{processor.counter} items processed, remaining"
-                f"{len(processor.queue)} on processor)")
+                f" {len(processor.queue)} on processor)")
 
 
 def main() -> None:
@@ -182,12 +182,13 @@ def main() -> None:
              "log_message": "User will is connected"}],
         42,
         ["Hi", "five"]]
-    print(f"\nSend first batch of data on stream: {random_data}\n")
+    print(f"Send first batch of data on stream: {random_data}\n")
     data_stream.process_stream(random_data)
     data_stream.print_processors_stats()
     print("\nSend 3 processed data from each processor to CSV plugin:")
     csv_plugin = CSVPlugin()
     data_stream.output_pipeline(3, csv_plugin)
+    print("")
     data_stream.print_processors_stats()
     random_data2 = [
         21,
@@ -197,12 +198,13 @@ def main() -> None:
             {'log_level': 'NOTICE',
              'log_message': 'Certificate expires in 10 days'}],
         [32, 42, 64, 84, 128, 168], 'World hello']
-    print(f"Send another batch of data: {random_data2}\n")
+    print(f"\nSend another batch of data: {random_data2}\n")
     data_stream.process_stream(random_data2)
     data_stream.print_processors_stats()
     json_plugin = JSONPlugin()
     print("\nSend 5 processed data from each processor to JSON plugin:")
     data_stream.output_pipeline(5, json_plugin)
+    print("")
     data_stream.print_processors_stats()
 
 

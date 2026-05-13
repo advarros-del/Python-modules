@@ -36,7 +36,7 @@ class NumericProcessor(DataProcessor):
         if self.validate(data) is True:
             if isinstance(data, list):
                 for item in data:
-                    self.queue.append((self.counter, [str(item)]))
+                    self.queue.append((self.counter, str(item)))
                     self.counter += 1
             else:
                 self.queue.append((self.counter, str(data)))
@@ -135,7 +135,7 @@ def main() -> None:
         print(f" Numeric value {h[0]}: {h[1]}")
         i += 1
     print("\nTesting Text Processor...")
-    print(f" Trying to validate input {text}: {text_queue.validate(text)} ")
+    print(f" Trying to validate input '{text}': {text_queue.validate(text)} ")
     print(f" Processing data: {text_list}")
     text_queue.validate(text_list)
     text_queue.ingest(text_list)
@@ -146,7 +146,7 @@ def main() -> None:
         print(f" Text value {index}: {data}")
         i += 1
     print("\nTesting Log Processor...")
-    print(f" Trying to validate input {log}: {log_queue.validate(log)} ")
+    print(f" Trying to validate input '{log}': {log_queue.validate(log)} ")
     print(f" Processing data: {Log_list}")
     log_queue.validate(Log_list)
     log_queue.ingest(Log_list)
