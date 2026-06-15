@@ -2,7 +2,7 @@ import alchemy.elements
 
 
 def printer() -> None:
-    print(f"Testing create_air: {alchemy.elements.create_air()}")
+    print(f"Testing create_air: {alchemy.elements.create_earth()}")
 
 
 def main() -> None:

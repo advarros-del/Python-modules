@@ -35,7 +35,7 @@ def main() -> None:
     print("Expected validation error:")
     try:
         bad_mod = SpaceStation(station_id="ISS001", name="International Space Station", 
-                               crew_size=6, power_level=185.5, oxygen_level=92.3,
+                               crew_size=55, power_level=85.5, oxygen_level=92.3,
                                last_maintenance="1995-05-22", is_operational=True, notes="")
     except ValidationError as e:
         print(e.errors()[0]['msg'])

@@ -17,24 +17,26 @@ class NormalStrategy(BattleStrategy):
     def act(self, creature: "Creature") -> None:
         print(creature.attack())
 
-    def is_valid(self, creature: "Creature") -> bool:    
+    def is_valid(self, creature: "Creature") -> bool:
         return hasattr(creature, 'attack')
-    
+
 
 class AggressiveStrategy(BattleStrategy):
     def act(self, creature: "Creature") -> None:
-        print(creature.transform())
-        print(creature.attack())
-        print(creature.revert())
+        if isinstance(creature, TransformCapability):
+            print(creature.transform())
+            print(creature.attack())
+            print(creature.revert())
 
     def is_valid(self, creature: "Creature") -> bool:
         return hasattr(creature, 'transform') and hasattr(creature, 'revert')
-    
+
 
 class DefensiveStrategy(BattleStrategy):
     def act(self, creature: "Creature") -> None:
-        print(creature.attack())
-        print(creature.heal("itself"))
+        if isinstance(creature, HealCapability):
+            print(creature.attack())
+            print(creature.heal("itself"))
 
     def is_valid(self, creature: "Creature") -> bool:
         return hasattr(creature, 'heal')

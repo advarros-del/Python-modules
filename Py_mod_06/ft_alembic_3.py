@@ -1,8 +1,8 @@
-from alchemy.elements import create_earth
+from alchemy.elements import create_air
 
 
 def printer() -> None:
-    print(f"Testing create_earth: {create_earth()}")
+    print(f"Testing create_earth: {create_air()}")
 
 
 def main() -> None:
