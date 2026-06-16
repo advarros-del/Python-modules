@@ -80,7 +80,7 @@ def main() -> None:
     try:
         for i in range(len(tour3)):
             for j in range(i + 1, len(tour3)):
-                print("*Battle*")
+                print("\n*Battle*")
                 fighter1: tuple = tour3[i]
                 fighter2: tuple = tour3[(j)]
                 print(f"{fighter1[0].describe()}\n "
@@ -97,7 +97,6 @@ def main() -> None:
                     raise BattleError(
                         f"Invalid criature '{fighter2[0].name}' "
                         f"for the {fighter2[1].__class__.__name__}")
-                print("")
     except BattleError as e:
         print(f"Battle error: {e}")
 
