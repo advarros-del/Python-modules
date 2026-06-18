@@ -32,11 +32,11 @@ class SpaceMission(BaseModel):
     budget_millions: float = Field(ge=1.0, le=10000.0)
 
     @model_validator(mode='after')
-    def mission_validator(self):
+    def mission_validator(self) -> 'SpaceMission':
         if not self.mission_id.startswith("M"):
             raise ValueError(
                 "Invalid id. You must introduce a valid id")
-        ranks: list = [member.timestamp for member in self.crew]
+        ranks: list[Rank] = [member.timestamp for member in self.crew]
         if Rank.COMMANDER not in ranks and Rank.CAPTAIN not in ranks:
             raise ValueError(
                 "Mission must have at least one Commander or Captain")
@@ -91,11 +91,12 @@ def main() -> None:
     except ValueError as e:
         print(e)
     try:
+        time: datetime = datetime.fromisoformat("2994-07-23T10:00:00")
         good_mis = SpaceMission(
             mission_id="M2024_MARS",
             mission_name="Mars Colony Establishment",
             destination="Mars",
-            launch_time="2994-07-23",
+            launch_time=time,
             duration_days=900,
             crew=[member1, member2, member3],
             mission_status="Planned",
@@ -116,11 +117,12 @@ def main() -> None:
     print("\n=========================================")
     print("Expected validation error:")
     try:
+        time1: datetime = datetime.fromisoformat("3994-07-23T10:00:00")
         bad_mis = SpaceMission(
             mission_id="M2045_SUN",
             mission_name="GOES TO SUN",
             destination="Sun",
-            launch_time="3994-07-23",
+            launch_time=time1,
             duration_days=200,
             crew=[member2, member4],
             mission_status="Planned",

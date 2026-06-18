@@ -17,12 +17,13 @@ def main() -> None:
     print("Space Station Data Validation")
     print("========================================")
     try:
+        time: datetime = datetime.fromisoformat("1995-05-22T10:00:00")
         good_mod = SpaceStation(station_id="ISS001",
                                 name="International Space Station",
                                 crew_size=6,
                                 power_level=85.5,
                                 oxygen_level=92.3,
-                                last_maintenance="1995-05-22",
+                                last_maintenance=time,
                                 is_operational=True,
                                 notes="")
         print("Valid station created:")
@@ -40,12 +41,13 @@ def main() -> None:
     print("\n========================================")
     print("Expected validation error:")
     try:
+        time1: datetime = datetime.fromisoformat("1995-05-22T10:00:00")
         bad_mod = SpaceStation(station_id="ISS001",
                                name="International Space Station",
                                crew_size=55,
                                power_level=85.5,
                                oxygen_level=92.3,
-                               last_maintenance="1995-05-22",
+                               last_maintenance=time1,
                                is_operational=True, notes="")
         print(f"ID: {bad_mod.station_id}")
     except ValidationError as e:

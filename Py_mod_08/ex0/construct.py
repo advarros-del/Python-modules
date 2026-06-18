@@ -1,6 +1,7 @@
 import sys
-import os 
+import os
 import site
+
 
 def main() -> None:
     if sys.prefix == sys.base_prefix and 'VIRTUAL_ENV' not in os.environ:
@@ -17,7 +18,8 @@ def main() -> None:
     else:
         print("MATRIX STATUS: Welcome to the construct\n")
         print(f"Current Python: {sys.executable}")
-        print(f"Virtual Environment: {os.path.basename(os.environ['VIRTUAL_ENV'])}")
+        print(f"Virtual Environment: "
+              f"{os.path.basename(os.environ['VIRTUAL_ENV'])}")
         print(f"Environment Path: {sys.prefix}\n")
         print("SUCCESS: You're in an isolated environment!")
         print("Safe to install packages without affecting")

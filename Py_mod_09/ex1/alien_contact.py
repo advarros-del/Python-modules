@@ -22,7 +22,7 @@ class AlienContact(BaseModel):
     is_verified: bool = False
 
     @model_validator(mode='after')
-    def validator(self):
+    def validator(self) -> 'AlienContact':
         if not self.contact_id.startswith("AC"):
             raise ValueError("The id must start with 'AC'")
         if (
@@ -51,8 +51,9 @@ def main() -> None:
     print("======================================")
     print("Valid contact report:")
     try:
+        time: datetime = datetime.fromisoformat("1994-07-23T10:00:00")
         good_al = AlienContact(contact_id="AC_2024_001",
-                               timestamp="1994-07-23",
+                               timestamp=time,
                                location="Area 51, Nevada",
                                contact_type=ContactType.RADIO,
                                signal_strength=8.5,
@@ -72,8 +73,9 @@ def main() -> None:
     print("\n======================================")
     print("Expected validation error:")
     try:
+        time1: datetime = datetime.fromisoformat("1994-07-23T10:00:00")
         bad_al = AlienContact(contact_id="AC_2024_001",
-                              timestamp="1994-07-23",
+                              timestamp=time1,
                               location="Area 51, Nevada",
                               contact_type=ContactType.TELEPATHIC,
                               signal_strength=8.5,
