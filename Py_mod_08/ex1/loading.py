@@ -7,46 +7,15 @@ def main() -> None:
     print("Checking dependencies:")
     state: str
     all_ok: bool = True
-    try:
-        state = "[OK]"
-        import pandas
-        print(f"{state} pandas ({importlib.metadata.version('pandas')})"
+    dependences_list: list = ["pandas", "numpy", "requests", "matplotlib"]
+    for dependence in dependences_list:
+        try:
+            version = importlib.metadata.version(dependence)
+            print(f"[OK] {dependence} ({importlib.metadata.version(dependence)})"
               f" - Data manipulation ready")
-    except ModuleNotFoundError:
-        state = "[MISSING]"
-        all_ok = False
-        print(f"{state} pandas - need to install.")
-    try:
-        state = "[OK]"
-        import numpy as np
-        print(f"[{state}] numpy  ({importlib.metadata.version('numpy')}) "
-              f"- Numerical computation ready")
-    except ModuleNotFoundError:
-        state = "[MISSING]"
-        print(f"[{state}] numpy - need to install.")
-        all_ok = False
-        sys.exit(1)
-    try:
-        state = "[OK]"
-        print(f"[{state}] requests ({importlib.metadata.version('requests')}) "
-              f"- Network access ready")
-    except ModuleNotFoundError:
-        state = "[MISSING]"
-        print(f"[{state}] requests - need to install.")
-        all_ok = False
-        sys.exit(1)
-    try:
-        state = "[OK]"
-        import matplotlib
-        print(f"[{state}] matplotlib "
-              f"({importlib.metadata.version('matplotlib')}) "
-              "- Visualization ready")
-    except ModuleNotFoundError:
-        state = "[MISSING]"
-        print(f"[{state}] matplotlib - need to install.")
-        all_ok = False
-        sys.exit(1)
-
+        except Exception:
+            print(f"[MISSING] {dependence}")
+            all_ok = False
     if not all_ok:
         print("Missing dependecies detected")
         print("You need to do:")
@@ -56,6 +25,9 @@ def main() -> None:
     else:
         print("Analyzing Matrix data...")
         print("Processing 1000 data points...")
+        import numpy as np
+        import pandas
+        import matplotlib
         numbers: np.ndarray = np.random.randint(0, 1000, size=1000)
         data_tablet = pandas.DataFrame(numbers)
         import matplotlib.pyplot

@@ -17,7 +17,7 @@ def spell_reducer(spells: list[int], operation: str) -> int:
     elif operation == "min":
         result = reduce(min, spells)
     return result
-        
+
 
 def partial_enchanter(base_enchantment: Callable) -> dict[str, Callable]:
     func1 = partial(base_enchantment, 50, "Ice")
@@ -43,7 +43,7 @@ def spell_dispatcher() -> Callable[[Any], str]:
     @singledispatch
     def dispatcher(arg):
         return "Unknown spell type"
-    
+
     @dispatcher.register(int)
     def damage(arg):
         return f"Damage spell : {arg} damage"
