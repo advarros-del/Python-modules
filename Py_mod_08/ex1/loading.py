@@ -5,14 +5,13 @@ import importlib.metadata
 def main() -> None:
     print("LOADING STATUS: Loading programs...\n")
     print("Checking dependencies:")
-    state: str
     all_ok: bool = True
     dependences_list: list = ["pandas", "numpy", "requests", "matplotlib"]
     for dependence in dependences_list:
         try:
             version = importlib.metadata.version(dependence)
-            print(f"[OK] {dependence} ({importlib.metadata.version(dependence)})"
-              f" - Data manipulation ready")
+            print(f"[OK] {dependence} ({version})"
+                  f" - Data manipulation ready")
         except Exception:
             print(f"[MISSING] {dependence}")
             all_ok = False

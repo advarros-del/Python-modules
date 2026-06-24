@@ -1,6 +1,6 @@
 from typing import Callable, Any
 import time
-from functools import wraps 
+from functools import wraps
 
 
 def spell_timer(func: Callable) -> Callable:
@@ -60,7 +60,7 @@ class MageGuild:
                 return True
         return False
 
-    @power_validator(min_power=10 )
+    @power_validator(min_power=10)
     def cast_spell(self, spell_name: str, power: int) -> str:
         return f"Successfully cast {spell_name} with {power} power"
 
@@ -69,6 +69,7 @@ class MageGuild:
 def fireball() -> str:
     time.sleep(0.101)
     return "Fireball cast!"
+
 
 @retry_spell(max_attempts=3)
 def invalid_spell() -> None:

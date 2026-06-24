@@ -8,9 +8,10 @@ def spell_combiner(spell1: Callable, spell2: Callable) -> Callable:
 
 
 def power_amplifier(base_spell: Callable, multiplier: int) -> Callable:
-    def amplifier(target:str, power: int) -> Callable:
+    def amplifier(target: str, power: int) -> Callable:
         return (base_spell(target, power * multiplier))
     return amplifier
+
 
 def conditional_caster(condition: Callable, spell: Callable) -> Callable:
     def cond_cast(target: str, power: int) -> Callable | str:
@@ -20,19 +21,24 @@ def conditional_caster(condition: Callable, spell: Callable) -> Callable:
             return "Spell fizzled"
     return cond_cast
 
+
 def spell_sequence(spells: list[Callable]) -> Callable:
     def caster(target: int, power: int) -> list[Callable]:
         return [spell(target, power) for spell in spells]
     return caster
 
+
 def fireball(target: str, power: int) -> str:
     return f"{target} recieve {power} damage"
+
 
 def heal(target: str, power: int) -> str:
     return f"Heal restores {target} for {power} HP"
 
+
 def cond_cast(target: str, power: int) -> bool:
     return power > 7
+
 
 def main() -> None:
     combined_spells = spell_combiner(fireball, heal)
@@ -48,6 +54,7 @@ def main() -> None:
     spell_sec = spell_sequence(spellbook)
     the_str = (", ".join(spell_sec('Dragon', 13)))
     print(f"The secuence: {the_str}")
+
 
 if __name__ == "__main__":
     main()

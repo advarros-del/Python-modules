@@ -3,18 +3,18 @@ from typing import Callable, Any
 
 def mage_counter() -> Callable:
     counter = 0
-    
+
     def counter_func() -> int:
-        nonlocal counter 
+        nonlocal counter
         counter += 1
         return counter
     return counter_func
-        
+
 
 def spell_accumulator(initial_power: int) -> Callable:
     power = initial_power
-    
-    def  acumulator(amount_power) -> int:
+
+    def acumulator(amount_power) -> int:
         nonlocal power
         power += amount_power
         return power
@@ -29,26 +29,26 @@ def enchantment_factory(enchantment_type: str) -> Callable:
 
 def memory_vault() -> dict[str, Callable]:
     the_dict: dict[str, Any] = {}
-    
+
     def store(key: str, value: int) -> str:
         the_dict[key] = value
         return f"{value}"
-    
-    def recall(key:str) -> str:
+
+    def recall(key: str) -> str:
         return f"{the_dict.get(key, 'Memory not found')}"
 
-    return {"store":store, "recall": recall}
+    return {"store": store, "recall": recall}
 
 
 def main() -> None:
     print("Testing mage counter...")
-    counter_a: int = mage_counter()
+    counter_a = mage_counter()
     print(f"counter_a call 1: {counter_a()}")
     print(f"counter_a call 2: {counter_a()}")
-    counter_b: int = mage_counter()
+    counter_b = mage_counter()
     print(f"counter_b call 1: {counter_b()}")
     print("\nTesting spell accumulator...")
-    the_amount = spell_accumulator(100) 
+    the_amount = spell_accumulator(100)
     print(f"Base 100, add 20: {the_amount(20)}")
     print(f"Base 100, add 30: {the_amount(30)}\n")
     ffactory = enchantment_factory("Frozen")

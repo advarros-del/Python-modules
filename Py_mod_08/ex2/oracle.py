@@ -16,11 +16,15 @@ def main() -> None:
         sys.exit(1)
     load_dotenv()
     print("ORACLE STATUS: Reading the Matrix...\n")
-    mode = os.getenv("MATRIX_MODE")
-    datab = os.getenv("DATABASE_URL")
-    api = os.getenv("API_KEY")
-    log = os.getenv("LOG_LEVEL")
-    zion = os.getenv("ZION_ENDPOINT")
+    try:
+        mode = os.getenv("MATRIX_MODE")
+        datab = os.getenv("DATABASE_URL")
+        api = os.getenv("API_KEY")
+        log = os.getenv("LOG_LEVEL")
+        zion = os.getenv("ZION_ENDPOINT")
+    except Exception as e:
+        print(e)
+        sys.exit(1)
     overrides_active = True if os.environ else False
     if any(x is None for x in [mode, datab, api, log, zion]):
         print("WARNING! Missing configuation info")

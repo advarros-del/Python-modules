@@ -5,7 +5,7 @@ import operator
 
 def spell_reducer(spells: list[int], operation: str) -> int:
     result: int = 0
-    if len(spells) == 0 or operation not in ["add","multiply", "max", "min"]: 
+    if len(spells) == 0 or operation not in ["add", "multiply", "max", "min"]:
         print("Error. Check the arguments")
         return result
     if operation == "add":
@@ -25,7 +25,7 @@ def partial_enchanter(base_enchantment: Callable) -> dict[str, Callable]:
     func3 = partial(base_enchantment, 50, "Wind")
     return {
         "ice enchant": func1,
-        "Fire enchant" :func2,
+        "Fire enchant": func2,
         "Wind enchant": func3
     }
 
@@ -46,14 +46,17 @@ def spell_dispatcher() -> Callable[[Any], str]:
 
     @dispatcher.register(int)
     def damage(arg):
-        return f"Damage spell : {arg} damage"
+        return f"Damage spell: {arg} damage"
+
     @dispatcher.register(str)
     def enchant(arg):
         return f"Enchantement: {arg}"
+
     @dispatcher.register(list)
     def multicast(arg):
         return f"Multi-cast: {len(arg)} spells"
     return dispatcher
+
 
 def main() -> None:
     print("Testing spell reducer...")
@@ -73,6 +76,7 @@ def main() -> None:
     spellbook: list = ["fireball", "heal", "meteor"]
     print(f"{dispat(spellbook)}")
     print(f"{dispat(None)}")
+
 
 if __name__ == "__main__":
     main()
